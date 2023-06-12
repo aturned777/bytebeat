@@ -552,27 +552,13 @@
     "description": "music bugs",
     "author": "Ola",
     "url": "http://countercomplex.blogspot.com/2011/10/algorithmic-symphonies-from-one-line-of.html?showComment=1318368575135#c8615755234789420078",
-    "date": "2011-10-11",
-    "codeOriginal": "((1-(((t+10)>>((t>>9)&((t>>14))))&(t>>4&-2)))*2)*(((t>>10)^((t+((t>>6)&127))>>10))&1)*32+128",
-    "codeMinified": "2*(1-(t+10>>(t>>9&t>>14)&t>>4&-2))*((t>>10^t+(t>>6&127)>>10)&1)*32+128"
-  },
-  {
-    "author": "Niklas_Roy",
-    "url": "http://countercomplex.blogspot.com/2011/10/algorithmic-symphonies-from-one-line-of.html?showComment=1318497618021#c332012386255047591",
-    "date": "2011-10-13",
+    "date:": "2011-10-11",
     "children": [
       {
-        "description": "Arcade game",
-        "codeOriginal": "( t* (( t>>9| t>>13 ) & 15)) & 129",
-        "codeMinified": "t*((t>>9|t>>13)&15)&129"
+        "codeOriginal": "((1-(((t+10)>>((t>>9)&15))&2))*2)*((((t)>>10)^((t+20)>>10))&1)*32+(((t&4095)-2047)*((t/((t>>10&3)+1))&((t>>10&7)+5))+(t>>(((t>>12)+16)&25)&1)*t%512*(t%256-128)/2)/1024+128"
       },
       {
-        "description": "Clean melody",
-        "codeOriginal": "t*(t>>9|t>>13)&16"
-      },
-      {
-        "description": "Louder clean melody",
-        "codeOriginal": "9*(t*((t>>9|t>>13)&15)&16)"
+        "codeOriginal": "2*(1-(t+10>>(t>>9&t>>14)&t>>4&-2))*((t>>10^t+(t>>6&127)>>10)&1)*32+128"
       }
     ]
   },
