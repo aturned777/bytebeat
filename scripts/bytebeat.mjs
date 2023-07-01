@@ -38,6 +38,7 @@ globalThis.bytebeat = new class {
 		this.controlSampleRate = null;
 		this.controlSampleRateSelect = null;
 		this.controlScaleDown = null;
+		this.controlThemeStyle = null;
 		this.controlTime = null;
 		this.controlTimeUnits = null;
 		this.controlVolume = null;
@@ -50,7 +51,13 @@ globalThis.bytebeat = new class {
 		this.isPlaying = false;
 		this.isRecording = false;
 		this.playbackSpeed = 1;
-		this.settings = { drawMode: 'Points', drawScale: 5, isSeconds: false, volume: .5 };
+		this.settings = {
+			drawMode: 'Points',
+			drawScale: 5,
+			isSeconds: false,
+			themeStyle: 'Default',
+			volume: .5
+		};
 		this.songData = { mode: 'Bytebeat', sampleRate: 8000 };
 		this.init();
 	}
@@ -247,7 +254,7 @@ globalThis.bytebeat = new class {
 	}
 	generateLibraryEntry({
 		author, children, codeMinified, codeOriginal, date, description, file, fileFormatted, fileMinified,
-		fileOriginal, mode, remixed, sampleRate, starred, stereo, url
+		fileOriginal, mode, remix, cover, sampleRate, starred, stereo, url
 	}) {
 		let entry = '';
 		if(description) {
@@ -273,11 +280,23 @@ globalThis.bytebeat = new class {
 		if(url && !description && !author) {
 			entry += `(<a href="${ url }" target="_blank">source</a>)`;
 		}
-		if(remixed) {
-			const { url: rUrl, description: rDescription, author: rAuthor } = remixed;
-			entry += ` (remix of ${ rUrl ? `<a href="${ rUrl }" target="_blank">${
-				rDescription || rAuthor }</a>` : `"${ rDescription }"`
-			}${ rDescription && rAuthor ? ' by ' + rAuthor : '' })`;
+		if(cover) {
+			const { url: cUrl, description: cDescription } = cover;
+			entry += ` (cover of ${ cUrl ?
+				`<a href="${ cUrl }" target="_blank">${ cDescription }</a>` :
+				`"${ cDescription }"`
+			})`;
+		}
+		if(remix) {
+			const arr = [];
+			const remixArr = Array.isArray(remix) ? remix : [remix];
+			for(let i = 0, len = remixArr.length; i < len; ++i) {
+				const { url: rUrl, description: rDescription, author: rAuthor } = remixArr[i];
+				arr.push(`${ rUrl ? `<a href="${ rUrl }" target="_blank">${
+					rDescription || rAuthor }</a>` : `"${ rDescription }"`
+				}${ rDescription && rAuthor ? ' by ' + rAuthor : '' }`);
+			}
+			entry += ` (remix of ${ arr.join(', ') })`;
 		}
 
 		if(date || sampleRate || mode || stereo) {
@@ -295,29 +314,31 @@ globalThis.bytebeat = new class {
 		}
 		const songData = codeOriginal || codeMinified || file ? JSON.stringify({ sampleRate, mode }) : '';
 		if(codeMinified) {
-			if(codeOriginal) {
-				entry += ` <span class="code-length" title="Size in characters">${
-					codeMinified.length }c</span><button class="code-button code-toggle"` +
-					' title="Minified version shown. Click to view the original version.">+</button>';
-			}
+			entry += ` <span class="code-length" title="Size in characters">${
+				codeMinified.length }c</span>` + (codeOriginal ? '<button class="code-button code-toggle"' +
+					' title="Minified version shown. Click to view the original version.">+</button>' : '');
 		} else if(codeOriginal) {
 			entry += ` <span class="code-length" title="Size in characters">${ codeOriginal.length }c</span>`;
 		}
 		if(file) {
+			let codeBtn = '';
 			if(fileFormatted) {
-				entry += `<button class="code-button code-load code-load-formatted" data-songdata='${
+				codeBtn += `<button class="code-button code-load code-load-formatted" data-songdata='${
 					songData }' data-code-file="${ file
 				}" title="Click to load and play the formatted code">formatted</button>`;
 			}
 			if(fileOriginal) {
-				entry += `<button class="code-button code-load code-load-original" data-songdata='${
+				codeBtn += `<button class="code-button code-load code-load-original" data-songdata='${
 					songData }' data-code-file="${ file
 				}" title="Click to load and play the original code">original</button>`;
 			}
 			if(fileMinified) {
-				entry += `<button class="code-button code-load code-load-minified" data-songdata='${
+				codeBtn += `<button class="code-button code-load code-load-minified" data-songdata='${
 					songData }' data-code-file="${ file
 				}" title="Click to load and play the minified code">minified</button>`;
+			}
+			if(codeBtn) {
+				entry += `<div class="code-buttons-container">${ codeBtn }</div>`;
 			}
 		}
 		if(codeOriginal) {
@@ -355,6 +376,7 @@ globalThis.bytebeat = new class {
 			case 'control-mode': this.setPlaybackMode(elem.value); break;
 			case 'control-samplerate':
 			case 'control-samplerate-select': this.setSampleRate(+elem.value); break;
+			case 'control-theme-style': this.setThemeStyle(elem.value); break;
 			}
 			return;
 		case 'click':
@@ -424,6 +446,7 @@ globalThis.bytebeat = new class {
 		} catch(err) {
 			this.saveSettings();
 		}
+		this.setThemeStyle();
 		await this.initAudioContext();
 		if(document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', () => this.initAfterDom());
@@ -440,7 +463,7 @@ globalThis.bytebeat = new class {
 		this.audioCtx = new AudioContext({ latencyHint: 'balanced', sampleRate: 48000 });
 		this.audioGain = new GainNode(this.audioCtx);
 		this.audioGain.connect(this.audioCtx.destination);
-		await this.audioCtx.audioWorklet.addModule('./scripts/audioProcessor.mjs?version=2023022000');
+		await this.audioCtx.audioWorklet.addModule('./scripts/audioProcessor.mjs?version=2023062600');
 		this.audioWorkletNode = new AudioWorkletNode(this.audioCtx, 'audioProcessor',
 			{ outputChannelCount: [2] });
 		this.audioWorkletNode.port.addEventListener('message', e => this.receiveData(e.data));
@@ -472,7 +495,7 @@ globalThis.bytebeat = new class {
 		['change', 'click', 'input', 'keydown'].forEach(
 			e => this.containerFixedElem.addEventListener(e, this));
 		const containerScroll = document.getElementById('container-scroll');
-		['click', 'mouseover'].forEach(e => containerScroll.addEventListener(e, this));
+		['change', 'click', 'mouseover'].forEach(e => containerScroll.addEventListener(e, this));
 
 		// Volume
 		this.controlVolume = document.getElementById('control-volume');
@@ -498,6 +521,8 @@ globalThis.bytebeat = new class {
 		this.controlSampleRate = document.getElementById('control-samplerate');
 		this.controlSampleRateSelect = document.getElementById('control-samplerate-select');
 		this.controlScaleDown = document.getElementById('control-scaledown');
+		this.controlThemeStyle = document.getElementById('control-theme-style');
+		this.controlThemeStyle.value = this.settings.themeStyle;
 		this.setScale(0);
 
 		// Time counter
@@ -832,6 +857,19 @@ globalThis.bytebeat = new class {
 		} else {
 			this.controlScaleDown.removeAttribute('disabled');
 		}
+	}
+	setThemeStyle(value) {
+		if(!value) {
+			value = this.settings.themeStyle;
+			if(!value) {
+				value = this.settings.themeStyle = 'Default';
+				this.saveSettings();
+			}
+			document.documentElement.dataset.theme = value;
+			return;
+		}
+		document.documentElement.dataset.theme = this.settings.themeStyle = value;
+		this.saveSettings();
 	}
 	setVolume(isInit) {
 		let volumeValue = NaN;
