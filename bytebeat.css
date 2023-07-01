@@ -1,9 +1,28 @@
 /* ==[ Document ] ========================================================================================= */
 
 :root {
-	--control-size: 30px;
+	--canvas-button: linear-gradient(to bottom, #67789d, #181f33);
+	--canvas-button-hover: linear-gradient(to bottom, #92aeec, #181f33) !important;
+	--canvas-border: #fda757;
+	--code-button: linear-gradient(to bottom, #424242, #171b22);
+	--code-button-hover: linear-gradient(to bottom, #3c508a, #1f2331);
+	--control-button: linear-gradient(to bottom, #959595, #242a37);
+	--control-button-active: linear-gradient(to bottom, #505f84, #1c1e26);
+	--control-button-hover: linear-gradient(to bottom, #738cc1, #28314a);
+	--control-button-hover-color: #badbff;
 	--control-corners: 6px;
+	--control-size: 30px;
+	--control-text: linear-gradient(to top, #3a445e, #181c26);
+	--control-volume: linear-gradient(to bottom, #aeaeae, #484c55);
+	--control-volume-hover: linear-gradient(to bottom, #90a7d7, #3f4c71);
+	--editor: #191c22;
+	--focus: #614fdb;
 	--font-size: 10.5pt;
+	--library-header: linear-gradient(to bottom, #202c46, #0b0d17);
+	--library-header-hover: linear-gradient(to bottom, #32426c, #151b2b);
+	--library-header-hover-color: #94c7ff;
+	--link: #89c2ff;
+	--link-hover: #ed88fb !important;
 }
 
 html {
@@ -11,6 +30,65 @@ html {
 	background-color: #000;
 	color: #c5c8c6;
 	font: var(--font-size) monospace;
+}
+
+html[data-theme="Blue"] {
+	--canvas-button: linear-gradient(to bottom, #4567b0, #121726);
+	--canvas-button-hover: linear-gradient(to bottom, #5082ee, #26335a) !important;
+	--canvas-border: #94beff;
+	--code-button: linear-gradient(to bottom, #34436f, #1f2331);
+	--code-button-hover: linear-gradient(to bottom, #526bb4, #1b2135);
+	--control-button: linear-gradient(to bottom, #4567b0, #121726);
+	--control-button-active: linear-gradient(to bottom, #35486d, #0d151f);
+	--control-button-hover: linear-gradient(to bottom, #507ee2, #1e2949);
+	--control-text: linear-gradient(to top, #435583, #131929);
+	--control-volume: linear-gradient(to bottom, #5077cc, #1a2238);
+	--control-volume-hover: linear-gradient(to bottom, #5183ee, #23315c);
+	--editor: #12151c;
+	--focus: #9782ff;
+	--library-header: linear-gradient(to bottom, #2c3e6a, #101420);
+	--library-header-hover: linear-gradient(to bottom, #405588, #192035);
+}
+
+html[data-theme="Green"] {
+	--canvas-button: linear-gradient(to bottom, #429152, #0d2814);
+	--canvas-button-hover: linear-gradient(to bottom, #51be67, #18331f) !important;
+	--canvas-border: #a4ffcc;
+	--code-button: linear-gradient(to bottom, #345e3d, #17221b);
+	--code-button-hover: linear-gradient(to bottom, #3c8a50, #1f3123);
+	--control-button: linear-gradient(to bottom, #508453, #17351d);
+	--control-button-active: linear-gradient(to bottom, #336036, #0c1e10);
+	--control-button-hover: linear-gradient(to bottom, #4ca85f, #0f2815);
+	--control-button-hover-color: #aaffc4;
+	--control-text: linear-gradient(to top, #3a5e44, #18261c);
+	--control-volume: linear-gradient(to bottom, #5a9d5e, #17351d);
+	--control-volume-hover: linear-gradient(to bottom, #68b46d, #3f714c);
+	--editor: #0f1716;
+	--focus: #aaffc4;
+	--library-header: linear-gradient(to bottom, #20462c, #0b170d);
+	--library-header-hover: linear-gradient(to bottom, #326c42, #152b1b);
+	--library-header-hover-color: #94ffc7;
+	--link: #89ffac;
+}
+
+html[data-theme="Purple"] {
+	--canvas-button: linear-gradient(to bottom, #9b3c8b, #331833);
+	--canvas-button-hover: linear-gradient(to bottom, #c765bf, #331832) !important;
+	--canvas-border: #c9b0ff;
+	--code-button: linear-gradient(to bottom, #5e345e, #221722);
+	--code-button-hover: linear-gradient(to bottom, #8a3c8a, #311f30);
+	--control-button: linear-gradient(to bottom, #845084, #321735);
+	--control-button-active: linear-gradient(to bottom, #603360, #1e0c1d);
+	--control-button-hover: linear-gradient(to bottom, #a54ca8, #280f28);
+	--control-text: linear-gradient(to top, #513a5e, #241826);
+	--control-volume: linear-gradient(to bottom, #985a9d, #331735);
+	--control-volume-hover: linear-gradient(to bottom, #ab68b4, #693f71);
+	--editor: #1a121c;
+	--focus: #8289ff;
+	--library-header: linear-gradient(to bottom, #432046, #170b16);
+	--library-header-hover: linear-gradient(to bottom, #65326c, #2b152a);
+	--link: #ca89ff;
+	--link-hover: #94c7ff !important;
 }
 
 body {
